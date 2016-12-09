@@ -23,7 +23,7 @@ public class VerifySearchItem extends SeleniumUtility{
             driver.get("http://www.homedepot.com");
 
             // Wait to enter text
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
 
             // Enter item into Search box = headerSearch
             driver.findElement(By.id("headerSearch")).sendKeys(text);

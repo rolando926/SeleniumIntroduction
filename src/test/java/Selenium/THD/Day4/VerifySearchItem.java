@@ -2,7 +2,6 @@ package Selenium.THD.Day4;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.concurrent.TimeUnit;
 import Utilities.SeleniumUtility;
 

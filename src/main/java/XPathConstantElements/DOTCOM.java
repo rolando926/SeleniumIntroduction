@@ -1,7 +1,7 @@
 package XPathConstantElements;
 
 /**
- * Created by rrolando on 12/13/16.
+ * Created by rrolando on 12/19/16.
  */
 public interface DOTCOM {
     //URLs
@@ -19,4 +19,9 @@ public interface DOTCOM {
     // Search Page elements
     public static final String searchResultText = ".//span[@class='original-keyword u__regular']";
     public static final String searchChristmasTrees = ".//h1[@class='page-header' and text()='Christmas Trees']";
+    public static final String searchPriceRefiner = ".//span[@class='top-refinement-label js-top-refinement-label drop-down__title drop-down__title--alt' and text()='Price']";
+
+    // Price Search
+    public static final String firstPriceElement = ".//span[@id='text_$0 - $10']";
+    public static final String firstPriceLabel = ".//span[@class='bttn__content' and text()='Price: $0 - $10']";
 }

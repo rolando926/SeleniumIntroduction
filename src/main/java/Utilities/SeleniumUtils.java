@@ -1,12 +1,16 @@
 package Utilities;
 
 import XPathConstantElements.DOTCOM;
+import com.google.common.base.Function;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -31,18 +35,22 @@ public class SeleniumUtils implements DOTCOM {
     public boolean waitUntilElementDisplayed(String expression){
         int counter = 0;
         do {
-            if(verifyEnabled(expression)){
+            if (verifyDisplayed(expression)){
                 return true;
             }
-            else if (verifyDisplayed(expression)){
-                return true;
+            else if (counter > 3){
+                if(verifyEnabled(expression)){
+                    return true;
+                }
+
+                else if (verifyLocation(expression)){
+                    return true;
+                }
             }
-            else if (verifyLocation(expression)){
-                return true;
-            }
+
             counter++;
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(950);
             }catch(Exception e){
                 return false;
             }
@@ -53,6 +61,7 @@ public class SeleniumUtils implements DOTCOM {
 
     public boolean verifyDisplayed(String expression){
         try {
+            TimeUnit.MILLISECONDS.sleep(50);
             if (driver.findElement(By.xpath(expression)).isDisplayed()) {
                 return true;
             }
@@ -64,6 +73,7 @@ public class SeleniumUtils implements DOTCOM {
 
     public boolean verifyEnabled(String expression){
         try {
+            TimeUnit.MILLISECONDS.sleep(50);
             if (driver.findElement(By.xpath(expression)).isEnabled()) {
                 return true;
             }
@@ -75,6 +85,7 @@ public class SeleniumUtils implements DOTCOM {
 
     public boolean verifyLocation(String expression){
         try{
+            TimeUnit.MILLISECONDS.sleep(50);
             if(driver.findElement(By.xpath(expression)).getLocation().x < 0 ||
                     driver.findElement(By.xpath(expression)).getLocation().y < 0){
                 return true;
@@ -162,6 +173,56 @@ public class SeleniumUtils implements DOTCOM {
             return false;
         }
         return false;
+    }
+
+    public boolean verifyLandingPage(String text){
+        String landingPageText = null;
+
+        if(waitUntilElementDisplayed(searchResultText)) {
+            landingPageText = driver.findElement(By.xpath(searchResultText)).getText();
+        }
+        if(landingPageText.contains(text)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean fluentWait(String element){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)    // Instantiate Fluent Wait
+                .withTimeout(MAX_WAIT_SECS,TimeUnit.SECONDS)        // Time out at Max Wait Time in Seconds
+                .pollingEvery(500,TimeUnit.MILLISECONDS)            // verify existence every half second
+                .ignoring(NoSuchElementException.class);            // ignore ONLY the NoSuchElementException
+        try {
+            //TimeUnit.MILLISECONDS.sleep(500);
+            if (wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(element))).isDisplayed()
+                    // || wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(element))).isEnabled() ||
+                    || wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(element))).getLocation().x < 0 ||
+                    wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(element))).getLocation().y < 0
+                    ) {
+                TimeUnit.MILLISECONDS.sleep(500);
+                return true;
+            }
+        }catch(Exception e){
+            return false;
+        }
+        return false;
+    }
+
+    public void fluentWaitUntil(String element){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)    // Instantiate Fluent Wait
+                .withTimeout(MAX_WAIT_SECS,TimeUnit.SECONDS)        // Time out at Max Wait Time in Seconds
+                .pollingEvery(500,TimeUnit.MILLISECONDS)            // verify existence every half second
+                .ignoring(NoSuchElementException.class);             // ignore ONLY the NoSuchElementException
+
+        WebElement elem = wait.until(new Function<WebDriver, WebElement>() {
+            @Override
+            public WebElement apply(WebDriver input) {
+                return input.findElement(By.xpath(element));
+            }
+        });
+
     }
 
 

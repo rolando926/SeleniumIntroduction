@@ -1,5 +1,4 @@
 package Utilities;
-
 import XPathConstantElements.DOTCOM;
 import com.google.common.base.Function;
 import org.openqa.selenium.By;
@@ -21,6 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class SeleniumUtils implements DOTCOM {
     //Selenium Properties
+    public static final String CHROME = "webdriver.chrome.driver";
     public static final int MAX_WAIT_SECS = 10;
     public static final String DRIVER_LOCATION = "/Users/rrolando/SeleniumIntroduction/chromedriver";
 
